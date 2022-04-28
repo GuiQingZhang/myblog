@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset=UTF-8">
+    <title>注册界面</title>
+    <!--Bootstrap core css -->
+    <link href="{% static 'bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6 col-md-offset-3">
+                <div class="page-header">
+                    <h2>用户注册<small>&nbsp;&nbsp;注册页面</small></h2>
+                </div>
+                <!--<form>标签设置novalidate让前端页面表单不对输入的字段值进行验证。设置enctype='multipart/form-data',表单才能支持上传图片、文件-->
+                <form novalidate action="/blog/registe/" method="post" class="form-horizontal" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label for="{{ formobj.username.id_for_label }}" class="col-sm-2 control-label">{{ formobj.username.label }}</label>
+                        <div class="col-md-8">{{ formobj.username }}<span class="help-block">{{ formobj.username.error.0 }}</span></div>
+                    </div>
+                    <div class="form-group">
+                        <label for="{{ formobj.password.id_for_label }}" class="col-sm-2 control-label">{{ formobj.password.label }}</label>
+                        <div class="col-md-8">{{ formobj.password }}<span class="help-block">{{ formobj.passwpod.error.0 }}</span></div>
+                    </div>
+                    <div class="form-group">
+                        <label for="{{ formobj.repassword.id_for_label }}" class="col-sm-2 control-label">{{ formobj.repassword.label }}</label>
+                        <div class="col-md-8">{{ formobj.repassword }}<span class="help-block">{{ formobj.repassword.error.0 }}</span></div>
+                    </div>
+                    <div class="form-group">
+                        <label for="{{ formobj.nikename.id_for_label }}" class="col-sm-2 control-label">{{  formobj.nikename.label }}</label>
+                        <div class="col-md-8">{{ formobj.nikename }}<span class="help-block">{{ formobj.nikename.error.0 }}</span></div>
+                    </div>
+                    <div class="form-group">
+                        <label for="{{ formobj.email.id_for_label }}" class="col-sm-2 control-label">{{ formobj.email.label }}</label>
+                        <div class="col-md-8">{{ formobj.email }}<span class="help-block">{{ formobj.email.error.0 }}</span></div>
+                    </div>
+                    <div class="form-group">
+                        <label for="{{ formobj.telephone.id_for_label }}" class="col-sm-2 control-label">{{ formobj.telephone.label }}</label>
+                        <div class="col-md-8">{{ formobj.telephone }}<span class="help-block">{{ formobj.telephone.error.0 }}</span></div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">{{ formobj.head_img.label }}</label>
+                        <div class="col-md-8">
+                            <label for="{{ formobj.head_img.id_for_label }}" class="col-sm-2 control-label">
+                                <img id="head-img" src="/static/image/headimg.png" style="height: 100px; width: 100px;">
+                            </label>
+                            {{ formobj.head_img }}<span class="help-block"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-offset-2 col-sm-10">
+                            <input type="submit" class="btn btn-success" value="用户注册" style="margin-left: 50px;">
+                            <a href="/" class="btn btn-success">返回首页</a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <script src="{% static 'jquery-3.4.1.min.js' %}"></script>
+    <script src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>
+    <script>
+        $("#id_head_img").change(function(){
+            //创建一个读取文件的对象
+            var_filerd = new FileReader();
+            //读取你选中的那个文件
+            filerd.readAsDataURL(this.files[0]);
+            //filerd.onload设置文件读取完成后的后续动作
+            filerd.onload = function(){
+                //把图片加载到<img>标签的src属性上
+                $("#head-img").attr("src",filerd.result);
+            };
+        });
+    </script>
+</body>
+</html>

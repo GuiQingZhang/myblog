@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset=UTF-8">
+    <title>评论页面</title>
+    <!--Bootstrap core css -->
+    <link href="{% static 'bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+</head>
+<body>
+    <!--判断用户是否登录，没有登陆不能发表评论-->
+    {% if request.user.username %}
+    <section class="comment-area">
+        <h3>发表评论</h3>
+        <hr>
+        <!--页面表单，{% url 'comments:blog_comment' blog.pk %}反向解析成URL，blog.pk作为参数传给URL表达式-->
+        <form action="{% url 'comments:blog_comment' blog.pk %}" method="post">
+            {% csrf_token %}
+            <div class="form-group">
+                <label class="col-md-2">名字:</label>
+                {{ request.user.nikename }}
+            </div>
+            <div class="form-group">
+                <label class="col-md-2">邮箱:</label>
+                {{ request.user.email }}
+            </div>
+            <div class="form-group">
+                <label for="{{ form.text.id_for_label }}" class="col-md-2">评论:</label>
+                <!--{{ form.text }}等表单有关变量自动转换成HTML标签-->
+                {{ form.text }}
+                <!--{{ form.text.error.0 }}将自动生成表单对应字段的错误-->
+                {{ form.text.error.0 }}
+            </div>
+            <div class="form-group">
+                <div class="col-md-offset-2">
+                    <button type="submit" class="btn btn-default">发表</button>
+                </div>
+            </div>
+            {% endif %}
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h5>评论列表，共<span>{{ comment_list||length }}</span>条评论</h5>
+                </div>
+                <div class="panel-body">
+                    <ul class="comment-list list-unstyled">
+                        {% for comment in comment_list %}
+                        <li>
+                            <span style="color: #777;font-size: 14px;">{{ comment.name }}&nbsp;&nbsp;</span>
+                            <time style="color: #777;font-size: 14px;">{{ comment.created_time }}</time>
+                            <div style="padding-top: 5px;font-size: 16px;">
+                                {{ comment.text }}
+                            </div>
+                        </li>
+                        {% empty %}
+                        暂无评论
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </form>
+    </section>
+</body>
+</html>

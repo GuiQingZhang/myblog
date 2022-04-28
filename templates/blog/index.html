@@ -1,0 +1,75 @@
+<!--指定该文件继承于base.html文件-->
+{% extends 'base.html' %}
+{% block main %}
+<!--如果传入的参数error_msg有值则显示其中的内容，视图把错误信息放在这个变量中-->
+{% if error_msg %}
+<p>{{ error_msg }}</p>
+{% endif %}
+<!--通过for循环从blog_list中取出每个blog实例对象,存在blog-->
+<div class="media">
+    {% for blog in blog_list %}
+    <div class="media-left">
+        <!--指定单击头像重定向到的路径-->
+        <a href="{% url 'blog:authorindex' blog.author.id %}">
+            <img class="media-object" src="/media/{{ blog.author.head_img }}" style="width: 100px;height: 100px;" alt="点击头像显示此作者的博客文章列表">
+        </a>
+    </div>
+    <div class="media-body">
+        <h3 class="media-heading"><a href="{{ blog.get_absolute_url }}">{{ blog.title }}</a></h3>
+        <!--文章的摘要，用来safe过滤器-->
+        <p>{{ blog.excerpt|safe }}...</p>
+        <div class="entry-meta">
+            <span class="blog-category"><a href="#">{{ blog.category.name }}</a></span>
+            <span class="blog-date"><a href="#"><time class="entry-date" datetime="{{ blog.created_time }}">{{ blog.created_time }}</time></a></span>
+            <span class="blog-author"><a href="#">{{ blog.author.nikename }}</a></span>
+            <span class="comments-link"><a href="#">{{ blog.comment_set.count }}</a></span>
+            <span class="views-count"><a href="#"></a>{{ blog.views }}阅读</span>
+        </div>
+    </div>
+    {% empty %}
+    <div class="no-post">暂时还没有发布的文章！</div>
+    {% endfor %}
+    {% if is_paginated %}
+    <nav aria-label="Page navigation">
+        <ul class="pagination">
+            {% if left %}
+            <!--上一页的URL、页码符号的设置-->
+            <li>
+                <a href="?page={{ page_obj.previous_page_number }}" aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+            {% else %}
+            <li class="disabled">
+                <a href="#" aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+            {% endif %}
+            <!--把当前页码前面的页码通过循环从left变量中取出来-->
+            {% for i in left %}
+            <li><a href="?page={{ i }}">{{ i }}</a></li>
+            {% endfor %}
+            <!--当前页URL、页码设置-->
+            <li class="active">
+                <a href="?page={{ page_obj.number }}">{{ page_obj.number }}<span class="sr-only">(current)</span></a>
+            </li>
+            {% for i in right %}
+            <li><a href="?page={{ i }}">{{i}}</a></li>
+            {% endfor %}
+            {% if right %}
+            <li>
+                <a href="?page={{ page_obj.next_page_number }}" aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+            {% else %}
+                <li class="disabled">
+                    <a href="#" aria-label="Next"><span aria-hidden="true">&raquo;</span></a>
+                </li>
+            {% endif %}
+        </ul>
+    </nav>
+    {% endif %}   
+</div>
+{% endblock main %}
